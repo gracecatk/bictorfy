@@ -1,56 +1,40 @@
-const path = require('path');
+// app.js
 const express = require('express');
 const session = require('express-session');
-const exphbs = require('express-handlebars');
-const routes = require('./controllers');
-const helpers = require('./utils/helpers');
-// app.js
-require('dotenv').config();
-
-// app.js
-const session = require('express-session');
 const cookieParser = require('cookie-parser');
+const hbs = require('hbs');
+const dotenv = require('dotenv');
+const db = require('./models/index');
+const mainController = require('./controllers/mainController');
+const authController = require('./controllers/authController');
 
-app.use(cookieParser());
-app.use(session({ secret: 'your-secret-key', resave: true, saveUninitialized: true }));
-//added this above
-
-const sequelize = require('./config/connection');
-const SequelizeStore = require('connect-session-sequelize')(session.Store);
+dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 3000;
 
-// Set up Handlebars.js engine with custom helpers
-const hbs = exphbs.create({ helpers });
-
-const sess = {
-  secret: 'Super secret secret',
-  cookie: {
-    maxAge: 300000,
-    httpOnly: true,
-    secure: false,
-    sameSite: 'strict',
-  },
-  resave: false,
-  saveUninitialized: true,
-  store: new SequelizeStore({
-    db: sequelize
-  })
-};
-
-app.use(session(sess));
-
-// Inform Express.js on which template engine to use
-app.engine('handlebars', hbs.engine);
-app.set('view engine', 'handlebars');
-
-app.use(express.json());
+app.use(express.static('public'));
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.json());
+app.use(cookieParser());
+app.use(session({ secret: process.env.SESSION_SECRET, resave: true, saveUninitialized: true }));
 
-app.use(routes);
+app.set('view engine', 'hbs');
+hbs.registerPartials(__dirname + '/views/partials');
 
-sequelize.sync({ force: false }).then(() => {
-  app.listen(PORT, () => console.log('Now listening'));
+// Routes
+app.get('/', mainController.getHome);
+app.post('/add-song', mainController.addSong);
+
+app.get('/login', authController.getLogin);
+app.post('/login', authController.postLogin);
+app.get('/signup', authController.getSignup);
+app.post('/signup', authController.postSignup);
+app.get('/logout', authController.logout);
+
+// Database synchronization
+db.sequelize.sync().then(() => {
+  app.listen(PORT, () => {
+    console.log(`Server is running on http://localhost:${PORT}`);
+  });
 });
