@@ -4,6 +4,16 @@ const session = require('express-session');
 const exphbs = require('express-handlebars');
 const routes = require('./controllers');
 const helpers = require('./utils/helpers');
+// app.js
+require('dotenv').config();
+
+// app.js
+const session = require('express-session');
+const cookieParser = require('cookie-parser');
+
+app.use(cookieParser());
+app.use(session({ secret: 'your-secret-key', resave: true, saveUninitialized: true }));
+//added this above
 
 const sequelize = require('./config/connection');
 const SequelizeStore = require('connect-session-sequelize')(session.Store);
