@@ -1,7 +1,6 @@
-const { DataTypes } = require('sequelize');
-
-module.exports = (sequelize) => {
-  return sequelize.define('User', {
+// models/user.js
+module.exports = (sequelize, DataTypes) => {
+  const User = sequelize.define('User', {
     username: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -12,4 +11,23 @@ module.exports = (sequelize) => {
       allowNull: false,
     },
   });
+
+  return User;
 };
+
+// models/song.js
+module.exports = (sequelize, DataTypes) => {
+  const Song = sequelize.define('Song', {
+    title: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    artist: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+  });
+
+  return Song;
+};
+
