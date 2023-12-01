@@ -17,6 +17,7 @@ exports.postLogin = (req, res) => {
 
 exports.getSignup = (req, res) => {
   // Render signup page
+  res.render('signup'); // Assuming you have a 'signup' view template
 };
 
 exports.postSignup = (req, res) => {
