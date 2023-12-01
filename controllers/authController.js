@@ -4,7 +4,8 @@ const AUTH_URL = "https://accounts.spotify.com/authorize?client_id=df91343a82f94
 
 
 exports.getLogin = (req, res) => {
-  // Render login page
+  // Redirect the user to the Spotify authorization URL
+  res.redirect(AUTH_URL);
 };
 
 exports.postLogin = (req, res) => {
