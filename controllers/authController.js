@@ -29,4 +29,6 @@ exports.postSignup = (req, res) => {
 
 exports.logout = (req, res) => {
   // Handle logout logic
+  // Implement logic to clear user session or perform any other necessary actions
+  res.redirect('/'); // Redirect to the home page after logout
 };
