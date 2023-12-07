@@ -68,7 +68,7 @@ document.querySelectorAll('.tab a').forEach(function (element) {
         headers: {"Content-Type": "application/json"}
     });
     if(login.ok) {
-        document.location.replace("/")
+        document.location.replace("/home")
     }
   }
   const signupFormHandler = async (event) => {
@@ -85,7 +85,7 @@ document.querySelectorAll('.tab a').forEach(function (element) {
         headers: {"Content-Type": "application/json"}
     });
     if(signup.ok) {
-        document.location.replace("/")
+        document.location.replace("/home")
     }
   }
 
