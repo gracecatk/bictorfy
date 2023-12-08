@@ -1,6 +1,24 @@
 // models/user.js
-module.exports = (sequelize, DataTypes) => {
-  const User = sequelize.define('User', {
+const {Model, DataTypes} = require("sequelize")
+const bcrypt = require("bcrypt")
+const sequelize = require("../config/connection")
+
+class User extends Model {
+  checkPassword(login){
+    return bcrypt.compareSync(login, this.password)
+  }
+}
+
+User.init(
+  {
+    id:{
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    primaryKey: true,
+    autoIncrement: true,
+
+    },
+
     username: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -10,24 +28,21 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false,
     },
-  });
-
-  return User;
-};
-
-// models/song.js
-module.exports = (sequelize, DataTypes) => {
-  const Song = sequelize.define('Song', {
-    title: {
-      type: DataTypes.STRING,
-      allowNull: false,
+  },
+  {
+    hooks: {
+      beforeCreate: async (newUser) => {
+        newUser.password = await bcrypt.hash(newUser.password, 10)
+        return newUser
+      },
+      beforeUpdate: async (updateUser) => {
+        updateUser.password = await bcrypt.hash(updateUser.password, 10)
+        return updateUser
+      },
     },
-    artist: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-  });
+    sequelize,timestamps: false, freezeTableName: true, underscored: true, modelName: "User"
+  }
+)
+module.exports = User
 
-  return Song;
-};
 
